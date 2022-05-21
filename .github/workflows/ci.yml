@@ -20,7 +20,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: binaries
-          path:
+          path: |
             ./linux-server.bin
             ./windows-server.exe
             ./macos-server.bin
