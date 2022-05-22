@@ -1,26 +1,27 @@
-name: CI
-
+name: CI # как назвать - выбираете сами
 on:
   push:
     branches:
       - master
       - main
-
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
+    env:
+      GHCR_REGISTRY: ghcr.io
+      IMAGE: ${{ github.repository }} # docker pull ghcr.io/coursar/frontend:latest
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v3 # вытаскиваем из нашего репо исходники
+      - uses: docker/build-push-action@v1
         with:
-          go-version: '1.18' # The Go version to download (if necessary) and use.
-      - run: GOOS=linux GOARCH=amd64 go build -o linux-server.bin ./cmd
-      - run: GOOS=windows GOARCH=amd64 go build -o windows-server.exe ./cmd
-      - run: GOOS=darwin GOARCH=amd64 go build -o macos-server.bin ./cmd
-      - uses: actions/upload-artifact@v3
-        with:
-          name: binaries
-          path: |
-            ./linux-server.bin
-            ./windows-server.exe
-            ./macos-server.bin
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          registry: ${{ env.GHCR_REGISTRY }}
+          repository: ${{ env.IMAGE }}
+          tag_with_ref: true
+
+
+
