@@ -12,7 +12,7 @@ func main() {
 		writer.Write(body)
 
 	})
-	err := http.ListenAndServe("localhost:9999", nil)
+	err := http.ListenAndServe("0.0.0.0:9999", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

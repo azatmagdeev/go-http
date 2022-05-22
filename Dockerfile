@@ -1,13 +1,13 @@
 FROM golang:1.18-bullseye AS build
 WORKDIR /app
 COPY . .
-RUN GOOS=linux GOARCH=amd64 go build -o linux-server.bin ./cmd
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o linux-server.bin ./cmd
 RUN chmod +x ./linux-server.bin
 
 FROM scratch
-#WORKDIR /app
+WORKDIR /app
 COPY --from=build /app/linux-server.bin .
-CMD ["./linux-server.bin"]
+CMD ["/app/linux-server.bin"]
 
 
 
