@@ -1,13 +1,10 @@
-FROM golang:1.18-bullseye AS build
+FROM golang:1.18-bullseye
 WORKDIR /app
-COPY . .
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o linux-server.bin ./cmd
-RUN chmod +x ./linux-server.bin
+COPY docker-entrypoint.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# RUN chmod +x ./linux-server.bin
 
-FROM scratch
-WORKDIR /app
-COPY --from=build /app/linux-server.bin .
-CMD ["/app/linux-server.bin"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 
 

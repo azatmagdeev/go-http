@@ -15,13 +15,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3 # вытаскиваем из нашего репо исходники
-      - uses: docker/build-push-action@v1
+      - run: docker build . -t builder
+      - run: docker run -v "$(pwd):/app" builder build
+      - uses: actions/upload-artifact@v3
         with:
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-          registry: ${{ env.GHCR_REGISTRY }}
-          repository: ${{ env.IMAGE }}
-          tag_with_ref: true
-
+          name: build
+          path: ./build
 
 
